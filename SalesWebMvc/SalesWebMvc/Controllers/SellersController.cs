@@ -34,8 +34,8 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken] //previne ataques CSRF - aproveitamento de seção para enviar dados maliciosos
         public IActionResult Create(Seller seller)
         {
-            _sellerService.Insert(seller); //redirecionar a ação para o metodo index do SellersController (mesma classe)
-            return RedirectToAction(nameof(Index));
+            _sellerService.Insert(seller); //inserir no BD
+            return RedirectToAction(nameof(Index));//redirecionar a ação para o metodo index do SellersController (mesma classe)
         }
 
     }
