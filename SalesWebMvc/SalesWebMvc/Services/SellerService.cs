@@ -21,12 +21,27 @@ namespace SalesWebMvc.Services
             return _context.Seller.ToList();
         }
 
+        public Seller FindById(int id)
+        {
+           return _context.Seller.FirstOrDefault(p => p.Id == id);
+        }
+
+        public void Remove(int id)
+        {
+            var obj = _context.Seller.Find(id); //pegar o obj pelo id
+            _context.Seller.Remove(obj); //remoção do objeto no DBset
+            _context.SaveChanges(); //salvar as alteracoes no entity framework 
+        }
+
+
+
         public void Insert(Seller obj)
         {
-            obj.Department = _context.Department.First();
             _context.Add(obj); //inserir dado no BD
             _context.SaveChanges();
         }
+
+
 
     }
 }
