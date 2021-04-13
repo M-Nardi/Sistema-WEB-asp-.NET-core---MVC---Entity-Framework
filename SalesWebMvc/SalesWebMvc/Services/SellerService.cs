@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesWebMvc.Services
 {
@@ -21,9 +22,9 @@ namespace SalesWebMvc.Services
             return _context.Seller.ToList();
         }
 
-        public Seller FindById(int id)
+        public Seller FindById(int id) //utilizados no controlador Sellers Delete/details
         {
-           return _context.Seller.FirstOrDefault(p => p.Id == id);
+           return _context.Seller.Include(obj => obj.Department).FirstOrDefault(p => p.Id == id);
         }
 
         public void Remove(int id)
@@ -33,13 +34,12 @@ namespace SalesWebMvc.Services
             _context.SaveChanges(); //salvar as alteracoes no entity framework 
         }
 
-
-
         public void Insert(Seller obj)
         {
             _context.Add(obj); //inserir dado no BD
             _context.SaveChanges();
         }
+   
 
 
 
