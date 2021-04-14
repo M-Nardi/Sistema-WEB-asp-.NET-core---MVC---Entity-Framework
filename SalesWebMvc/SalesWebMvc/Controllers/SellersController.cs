@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SalesWebMvc.Services;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Controllers
 {
@@ -86,7 +87,52 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
-        
+        public IActionResult Edit(int? id)
+        {
+            if (id == null) //existe o id é igual a nulo? ele foi informado?
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+
+            if (obj == null) //existe no DB este vendedor deste id?
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _departmentService.FindAll(); //carregar os departamentos para povoar a caixa de seleção da view
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments }; //como será uma tela de edição, preencheremos ja os campos dados do obj. Passaremos o departments também.
+            return View(viewModel);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id) //verifica a integridade dos dados do id passado e do vendedor
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
+
+        }
 
     }
 }

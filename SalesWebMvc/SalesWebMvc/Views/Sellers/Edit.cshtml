@@ -1,0 +1,47 @@
+﻿@model SalesWebMvc.Models.ViewModels.SellerFormViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Edit Seller's informations</h4>
+
+@*div garante que ocupara a lagura da tela*@
+<div class="row">
+    <div class="col-md-4">@*div para ocupar 1;3 da tela*@
+        
+        <form asp-action="Edit"> @*chamada do método post*@
+            
+            <input type="hidden" asp-for="Seller.Id" /> @*Adicionado campo hidden de id*@
+
+            <div class="form-group">
+                <label asp-for="Seller.Name" class="control-label"></label>@*define o label que aparecerá na caixa para digitar, chamaremos o name da classe seller*@
+
+                <input asp-for="Seller.Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Seller.Email" class="control-label"></label>
+                <input asp-for="Seller.Email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Seller.BirthDate" class="control-label"></label>
+                <input asp-for="Seller.BirthDate" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Seller.BaseSalary" class="control-label"></label>
+                <input asp-for="Seller.BaseSalary" class="form-control" />
+            </div>
+            <div class="form-group"> @*Selecao de departamento*@
+                <label asp-for="Seller.DepartmentId" class="control-label"></label>
+                <select asp-for="Seller.DepartmentId" asp-items="@(new SelectList(Model.Departments,"Id","Name"))" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" /> @*submit action create*@
+            </div>
+
+        @*A view carregara os campos com as informações preenchidas, pois passamos como parametro o obj Seller no SellerFormViewModel do Edit*@
+
+        </form>
+</div>
+</div>
