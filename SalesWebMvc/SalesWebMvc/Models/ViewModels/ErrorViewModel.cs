@@ -6,6 +6,10 @@ namespace SalesWebMvc.Models.ViewModels
     {
         public string RequestId { get; set; }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public string Message { get; set; } //acrescentar mensagem customizada
+
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId); //id interno que poderemos mostrar na pag de erro
+
+
     }
 }

@@ -46,7 +46,7 @@ namespace SalesWebMvc.Services
             if (!_context.Seller.Any(x => x.Id == obj.Id)) //existe no BD?
             {
                 throw new NotFoundException("Id not found");
-            }
+            } 
 
             try
             {
@@ -59,6 +59,8 @@ namespace SalesWebMvc.Services
             }                                                //controlador irá lidar com exceções da camada de serviço. Exceções de repositórios será capturada pela Camada de serviço, e lançada a nivel de serviço.
         
         }
+
+        
 
     }
 }
