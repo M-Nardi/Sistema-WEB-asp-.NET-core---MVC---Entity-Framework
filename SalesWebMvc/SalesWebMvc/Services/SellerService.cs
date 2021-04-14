@@ -6,6 +6,7 @@ using SalesWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
 
+
 namespace SalesWebMvc.Services
 {
     public class SellerService
@@ -18,32 +19,33 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList();
+            return await _context.Seller.ToListAsync();
         }
 
-        public Seller FindById(int id) //utilizados no controlador Sellers Delete/details
+        public async Task<Seller> FindByIdAsync(int id) //utilizados no controlador Sellers Delete/details
         {
-           return _context.Seller.Include(obj => obj.Department).FirstOrDefault(p => p.Id == id);
+           return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public void Remove(int id) //usado no controlador Delete
+        public async Task RemoveAsync(int id) //usado no controlador Delete
         {
-            var obj = _context.Seller.Find(id); //pegar o obj pelo id
+            var obj = await _context.Seller.FindAsync(id); //pegar o obj pelo id
             _context.Seller.Remove(obj); //remoção do objeto no DBset
-            _context.SaveChanges(); //salvar as alteracoes no entity framework 
+            await _context.SaveChangesAsync(); //salvar as alteracoes no entity framework 
         }
 
-        public void Insert(Seller obj) //usado no controlador Create
+        public async Task InsertAsync(Seller obj) //usado no controlador Create
         {
             _context.Add(obj); //inserir dado no BD
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Seller obj) //usado no controlador Edit
+        public async Task UpdateAsync(Seller obj) //usado no controlador Edit
         {
-            if (!_context.Seller.Any(x => x.Id == obj.Id)) //existe no BD?
+            bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+            if (!hasAny) //existe no BD?
             {
                 throw new NotFoundException("Id not found");
             } 
@@ -51,7 +53,7 @@ namespace SalesWebMvc.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges(); //poderá retornar uma excecao de conflito de concorrencia, utilizaremos um bloco try e um catch para capturar uma possivel excecao
+                await _context.SaveChangesAsync(); //poderá retornar uma excecao de conflito de concorrencia, utilizaremos um bloco try e um catch para capturar uma possivel excecao
             }
             catch (DbUpdateConcurrencyException e) //intercepcao de nivel de acesso a dados
             {

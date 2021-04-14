@@ -23,37 +23,37 @@ namespace SalesWebMvc.Controllers
             _sellerService = sellerService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _sellerService.FindAll();
+            var list = await _sellerService.FindAllAsync();
             return View(list);
         }
 
-        public IActionResult Create() //metodo que abre formulario para cadastro do vendedor.
+        public async Task<IActionResult> Create() //metodo que abre formulario para cadastro do vendedor.
         {
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departments = departments };
             return View(viewModel);
         }
 
         [HttpPost] //declarando q o método é post
         [ValidateAntiForgeryToken] //previne ataques CSRF - aproveitamento de seção para enviar dados maliciosos
-        public IActionResult Create(Seller seller)
+        public async Task<IActionResult> Create(Seller seller)
         {
             if (!ModelState.IsValid) //verifica se ao editar os campos foram mandados conforme regras
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
                 
                 return View(viewModel);
             }
 
-            _sellerService.Insert(seller); //inserir no BD
+            await _sellerService.InsertAsync(seller); //inserir no BD
             return RedirectToAction(nameof(Index));//redirecionar a ação para o metodo index do SellersController (mesma classe)
         }
 
 
-        public IActionResult Delete(int? id)//este GET apenas confirmará a deleção. A deleção será feita no método POST - deleção vendedor
+        public async Task<IActionResult> Delete(int? id)//este GET apenas confirmará a deleção. A deleção será feita no método POST - deleção vendedor
         {//recebera como parametro int opcional
             
             if (id == null) //requisição foi feita corretamente?
@@ -61,7 +61,7 @@ namespace SalesWebMvc.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var obj = _sellerService.FindById(id.Value); //colocar .value pois o id do parametro é opcional "nullable"
+            var obj = await _sellerService.FindByIdAsync(id.Value); //colocar .value pois o id do parametro é opcional "nullable"
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -72,21 +72,21 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _sellerService.Remove(id);
+            await _sellerService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null) //requisição foi feita corretamente?
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var obj = _sellerService.FindById(id.Value);
+            var obj = await _sellerService.FindByIdAsync(id.Value);
 
             if (obj == null)
             {
@@ -96,21 +96,21 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) //existe o id é igual a nulo? ele foi informado?
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var obj = _sellerService.FindById(id.Value);
+            var obj = await _sellerService.FindByIdAsync(id.Value);
 
             if (obj == null) //existe no DB este vendedor deste id?
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
-            List<Department> departments = _departmentService.FindAll(); //carregar os departamentos para povoar a caixa de seleção da view
+            List<Department> departments = await _departmentService.FindAllAsync(); //carregar os departamentos para povoar a caixa de seleção da view
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments }; //como será uma tela de edição, preencheremos ja os campos dados do obj. Passaremos o departments também.
             return View(viewModel);
 
@@ -118,12 +118,12 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
 
             if (!ModelState.IsValid) //verifica se ao editar os campos foram mandados conforme regras
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
 
                 return View(viewModel);
@@ -136,7 +136,7 @@ namespace SalesWebMvc.Controllers
 
             try
             {
-                _sellerService.Update(seller);
+                await _sellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
 
