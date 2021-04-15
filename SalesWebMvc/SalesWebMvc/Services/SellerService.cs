@@ -26,7 +26,7 @@ namespace SalesWebMvc.Services
 
         public async Task<Seller> FindByIdAsync(int id) //utilizados no controlador Sellers Delete/details
         {
-           return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(p => p.Id == id);
+           return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(p => p.Id == id); //injecao de departamento no seller include
         }
 
         public async Task RemoveAsync(int id) //usado no controlador Delete
