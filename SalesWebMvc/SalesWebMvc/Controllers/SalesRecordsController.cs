@@ -44,9 +44,24 @@ namespace SalesWebMvc.Controllers
 
         }
 
-        public IActionResult GroupingSearch()
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+
+            if (!minDate.HasValue) //Se o label nao for preenchido, pegará o ano atual, e dia/mes 1 do ano
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+
+            if (!maxDate.HasValue) //só funciona com o ? no argumento
+            {
+                maxDate = DateTime.Now; //Se o label nao for preenchido, pegara a data atual
+            }
+            //deixar o campo selecionado após inserção da data
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd"); //passaremos os dados para a view desta forma com o dicionario viewData
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd"); //para incluir na view, adicionar no input value=@ViewData["minDate"]
+
+            var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
+            return View(result);
         }
 
 

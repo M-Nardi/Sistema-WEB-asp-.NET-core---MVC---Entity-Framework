@@ -1,5 +1,82 @@
-﻿@{
+﻿@model IEnumerable<IGrouping<Department, SalesRecord>>
+
+@{
     ViewData["Title"] = "Grouping Search";
+    DateTime minDate = DateTime.Parse(ViewData["minDate"] as string);
+    DateTime maxDate = DateTime.Parse(ViewData["maxDate"] as string);
 }
 
 <h2>@ViewData["Title"]</h2>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="minDate">Min Date</label>
+                    <input type="date" class="form-control" name="minDate" value=@ViewData["minDate"]> @*igual ao simple search view*@
+                </div>
+                <div class="form-group">
+                    <label for="maxDate">Max Date</label>
+                    <input type="date" class="form-control" name="maxDate" value=@ViewData["maxDate"]>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+    </div>
+</nav>
+
+@*como os dados estão agrupados em departamentos, faremos 2 foreachs*@
+@*<IGrouping<Department, SalesRecord>, para cada departamento existirão vários salesRecords*@
+@*1 foreach percorrera os departamentos que fazem parte da lista de agrupamentos*@
+@*2 foreach percorrera para cada departamento todos os salesRecords*@
+
+@foreach (var departmentGroup in Model)
+{
+    <div class="panel panel-primary"> @*criaremos um painel para cada laço*@
+        <div class="panel-heading">
+            <h3 class="panel-title">Department @departmentGroup.Key.Name, Total sales = @departmentGroup.Key.TotalSales(minDate, maxDate).ToString("F2")</h3> @*titulo painel*@
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-hover"> @*dentro do laço, criaremos as colunas*@
+                <thead>
+                    <tr class="success">
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Seller
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody> @*neste foreach, para cada linah da tabela, povoaremos com a informação das vendas do devido departamento*@
+                    @foreach (var item in departmentGroup)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Seller.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
