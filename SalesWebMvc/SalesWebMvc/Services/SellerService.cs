@@ -31,9 +31,16 @@ namespace SalesWebMvc.Services
 
         public async Task RemoveAsync(int id) //usado no controlador Delete
         {
+            try { 
             var obj = await _context.Seller.FindAsync(id); //pegar o obj pelo id
             _context.Seller.Remove(obj); //remoção do objeto no DBset
             await _context.SaveChangesAsync(); //salvar as alteracoes no entity framework 
+            }
+
+            catch (DbUpdateException) //exceção de remover um vendedor com vendas
+            {
+                throw new IntegrityException("Can't remove seller because he/she has sales"); //lançar exception em nivel de serviço
+            }
         }
 
         public async Task InsertAsync(Seller obj) //usado no controlador Create
