@@ -1,15 +1,22 @@
-﻿@{
+﻿@model SalesWebMvc.Models.Seller
+@{
     ViewData["Title"] = "Sales Records";
+    ViewData["Description"] = "Search sales by date or name to see status and more informations";
 }
 
 <h2>@ViewData["Title"]</h2>
+<h4>@ViewData["Description"]</h4>
+
+<hr />
 
 <div class="row">
     <div class="col-md-6">
-        <form class="form-horizontal" asp-action="SimpleSearch"> @*Ação para o método SimpleSearch do controlador SalesRecords*@
-            <fieldset> @*agrupar elementos*@
+        <form class="form-horizontal" asp-action="SimpleSearch">
+            @*Ação para o método SimpleSearch do controlador SalesRecords*@
+            <fieldset>
+                @*agrupar elementos*@
 
-                <legend>Simple search</legend>
+                <legend>Simple search by Date</legend>
 
                 <div class="form-group">
                     <label for="minDate" class="col-lg-2 control-label">Min Date</label> @*Caixa de seleção data minima*@
@@ -38,10 +45,12 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form class="form-horizontal" asp-action="GroupingSearch"> @*Ação para o método GroupingSearch do controlador SalesRecords*@
-            <fieldset> @*agrupar elementos*@
+        <form class="form-horizontal" asp-action="GroupingSearch">
+            @*Ação para o método GroupingSearch do controlador SalesRecords*@
+            <fieldset>
+                @*agrupar elementos*@
 
-                <legend>Grouping search</legend>
+                <legend>Grouping search by Date</legend>
 
                 <div class="form-group">
                     <label for="minDate" class="col-lg-2 control-label">Min Date</label> @*Caixa de seleção data minima*@

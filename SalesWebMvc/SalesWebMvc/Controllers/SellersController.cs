@@ -16,6 +16,7 @@ namespace SalesWebMvc.Controllers
 
         private readonly SellerService _sellerService;
         private readonly DepartmentService _departmentService; //nova dependencia, injetar tambem no construtor
+    
 
         public SellersController(SellerService sellerService, DepartmentService departmentService)
         {
