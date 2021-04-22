@@ -69,7 +69,12 @@ namespace SalesWebMvc.Services
         
         }
 
-        
+        public async Task<List<Seller>> FindAllNameAsync() //implementacao utilizada no salesrecord
+        {
+            return await _context.Seller.OrderBy(x => x.Name).ToListAsync();
+        }
+
+
 
     }
 }

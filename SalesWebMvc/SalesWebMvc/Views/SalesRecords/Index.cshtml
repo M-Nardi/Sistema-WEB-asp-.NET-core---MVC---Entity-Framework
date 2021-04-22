@@ -1,4 +1,4 @@
-﻿@model SalesWebMvc.Models.Seller
+﻿@model SalesWebMvc.Models.ViewModels.SalesFormViewModel
 @{
     ViewData["Title"] = "Sales Records";
     ViewData["Description"] = "Search sales by date or name to see status and more informations";
@@ -43,6 +43,8 @@
     </div>
 </div>
 
+<hr />
+
 <div class="row">
     <div class="col-md-6">
         <form class="form-horizontal" asp-action="GroupingSearch">
@@ -69,6 +71,35 @@
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
                         <button type="submit" class="btn btn-primary">Submit</button> @*Submit das datas selecionadas*@
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form class="form-horizontal" asp-action="NameSearch">
+            @*Ação para o método GroupingSearch do controlador SalesRecords*@
+            <fieldset>
+                @*agrupar elementos*@
+
+                <legend>Search by name</legend>
+
+                <div class="form-group">
+                    <label  for="id" class="col-lg-2 control-label">Seller's name</label>
+                    <div class="col-lg-10">
+                        <select name="id" asp-items="@(new SelectList(Model.Sellers,"Id","Name"))" class="form-control">aaa</select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <input type="submit" value="Submit" name="id" class="btn btn-primary" /> @*Submit das datas selecionadas*@
                     </div>
                 </div>
 

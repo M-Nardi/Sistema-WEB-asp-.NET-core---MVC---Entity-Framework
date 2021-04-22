@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc.Services;
+using SalesWebMvc.Models.ViewModels;
+using SalesWebMvc.Services.Exceptions;
+using System.Diagnostics;
+using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Controllers
 {
@@ -11,17 +15,24 @@ namespace SalesWebMvc.Controllers
     {
 
         private readonly SalesRecordService _salesRecordService; //dependencia dos servicos
+        private readonly SellerService _sellerService;
 
 
-        public SalesRecordsController(SalesRecordService salesRecordService)
+        public SalesRecordsController(SalesRecordService salesRecordService, SellerService sellerService)
         {
             _salesRecordService = salesRecordService;
+            _sellerService = sellerService;
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<Seller> sellers = await _sellerService.FindAllAsync();
+
+
+            SalesFormViewModel viewModel = new SalesFormViewModel { Sellers = sellers};
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate)
@@ -29,7 +40,7 @@ namespace SalesWebMvc.Controllers
 
             if (!minDate.HasValue) //Se o label nao for preenchido, pegará o ano atual, e dia/mes 1 do ano
             {
-                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+                minDate = new DateTime(1998, 1, 1);
             }
 
             if (!maxDate.HasValue)
@@ -50,7 +61,7 @@ namespace SalesWebMvc.Controllers
 
             if (!minDate.HasValue) //Se o label nao for preenchido, pegará o ano atual, e dia/mes 1 do ano
             {
-                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+                minDate = new DateTime(1998, 1, 1);
             }
 
             if (!maxDate.HasValue) //só funciona com o ? no argumento
@@ -64,7 +75,16 @@ namespace SalesWebMvc.Controllers
             var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
             return View(result);
         }
+    
+
+    public async Task<IActionResult> NameSearch(int? id)
+    {
+       var minDate = new DateTime(1998, 1, 1);
+       var maxDate = DateTime.Now;
+
+       var result = await _salesRecordService.FindByNameAsync(minDate,maxDate,id);
+       return View(result);
     }
 
-       
+    }
 }

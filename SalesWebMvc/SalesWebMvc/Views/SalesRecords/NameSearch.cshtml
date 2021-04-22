@@ -1,0 +1,81 @@
+﻿@model IEnumerable<SalesWebMvc.Models.SalesRecord>
+
+@{
+    ViewData["Title"] = "Search for name result";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<div class="panel panel-primary">
+    @*listagem de vendas em um painel*@
+
+    <div class="panel-heading">
+        @*Cabeçalho do painel*@
+        <h3 class="panel-title">Total sales = @Model.Sum(obj => obj.Amount).ToString("F2")</h3> @*Titulo do painel, soma total das vendas com lambda*@
+    </div>
+
+    <div class="panel-body">
+        @*Corpo do painel*@
+
+        <table class="table table-striped table-hover">
+            @*Tabela*@
+
+            <thead>
+                <tr class="success">
+                    @*Mostrar o nome das colunas*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Seller)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Seller.Department)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Amount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @*foreach para mostrar os dados em cada linha da coluna*@
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Seller.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Seller.Department.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-success">Back to search page</a>
+</div>
